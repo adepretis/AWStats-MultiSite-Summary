@@ -2,7 +2,7 @@
 
 ###############################################################################
 #
-# AWStats MultiSite Summary 0.1
+# AWStats MultiSite Summary 0.2
 #
 # For more information please have a look at http://www.25th-floor.com/oss
 #
@@ -31,6 +31,7 @@ use File::Spec::Functions;
 use File::Find::Rule;
 use Template;
 use Math::Round::Var;
+use File::Slurp;
 use Switch;
 
 use constant TRUE => 1;
@@ -39,25 +40,20 @@ use constant FALSE => 0;
 #
 # Configuration
 #
-my @cacheroots = (                              # AWStats directories to check
-	'/var/cache/awstats/WEB',
-	'/var/cache/awstats/WEB_KZ',
-);
-my $awstats = '/awstats.pl';                    # URL to awstats.pl
-my $template_root = '_system/templates';        # Template basedir
+my $awstats_config_dir = '/etc/awstats';            # directory where AWStats config files are stored
+my $awstats_uri = '/awstats.pl';                    # URI to awstats.pl
+my $template_root = '_system/templates';            # Template basedir (relative or absolute)
 
 
-################### Don't change anything below this line #####################
+################# No need to change anything below this line ##################
 
 #
 # Variables
 #
-my $username;
-my @sites = ();
 my $content = '';
 my %data = (
-    'awstats' => $awstats,
-    'version' => '0.1',
+    'awstats' => $awstats_uri,
+    'version' => '0.2',
     'sites'   => [],
 );
 
@@ -69,6 +65,10 @@ my $tt ||= Template->new(
     COMPILE_EXT  => '.ttc',
     COMPILE_DIR  => '/tmp/ttc',
 ) or die Template::ERROR();
+
+#
+# instance various objects
+#
 my $rounder = Math::Round::Var::Float->new(precision => 2);
 
 #
@@ -77,27 +77,51 @@ my $rounder = Math::Round::Var::Float->new(precision => 2);
 $data{username} = $ENV{REMOTE_USER} || die "Error: no username given";
 
 #
-# process awstats cache root(s)
+# get available config files
 #
-foreach my $cacheroot (@cacheroots) {
-	my @cachedirs = File::Find::Rule->directory->relative->in($cacheroot);
+my @files = File::Find::Rule->file
+                            ->name("awstats.*?\.conf")
+                            ->relative
+                            ->in($awstats_config_dir);
+
+foreach my $configfile (@files) {
+    #
+    # slurp configuration file
+    #
+    my @file = read_file(catfile($awstats_config_dir, $configfile));
 
     #
-    # build array containing awstats cachefiles containing the username
-    # and therefore belong to the user (= a site)
+    # check for allowed users containing current user
     #
-    # sort by mtime
-    #
-	foreach my $cachedir (@cachedirs) {
-		if (my @files = map { $_->[0] }
+    if (grep /^AllowAccessFromWebToFollowingAuthenticatedUsers=".*$data{username}.*?"/, @file) {
+        my $configname = '';
+        my $cachedir = '';
+        my $sitedomain = '';
+
+        #
+        # extract config name for direct linking
+        #
+        ($configname = $configfile) =~ s/awstats\.(.*?)\.conf/$1/;
+
+        #
+        # get specific needed configfile values
+        #
+        map { chomp; ($cachedir = $_) =~ s/^DirData="(.*?)".*/$1/ } grep(/^DirData=".*?"/, @file);
+        map { chomp; ($sitedomain = $_) =~ s/^SiteDomain="(.*?)".*/$1/ } grep(/^SiteDomain=".*?"/, @file);
+
+        #
+        # process awstats cache dir (get the most actual history file)
+        #
+		if (my $history = (
+                        map { $_->[0] }
                         sort { $a->[1] <=> $b->[1] }
-                        map { [$_, ((stat catfile($cacheroot, $cachedir, $_))[9])]; }
+                        map { [$_, ((stat catfile($cachedir, $_))[9])]; }
                         File::Find::Rule->file
-		                    ->name("awstats[0-9]*.$data{username}.txt",
-                                   "awstats[0-9]*.$data{username}_*.txt")
+		                    ->name("awstats[0-9]*.txt")
                             ->relative
-	                        ->in(catfile($cacheroot, $cachedir))) {
-            my $configname;
+	                        ->in($cachedir)
+                        )[-1]) {
+
             my $visitors = 0;
             my $visits = 0;
             my $pages = 0;
@@ -108,16 +132,11 @@ foreach my $cacheroot (@cacheroots) {
             my $startacc = FALSE;
 
             #
-            # get configuration name (used for linking to correct statistic)
-            #
-            ($configname = $files[-1]) =~ s/awstats[0-9]+\.(.*?)\.txt/$1/;
-            
-            #
             # get overall statistical values (from last array element = last modified
             # history file)
             #
-            open (HISTORY, catfile($cacheroot, $cachedir, $files[-1]))
-                or die "Error: couldn't open " . catfile($cacheroot, $cachedir, $files[-1]);
+            open (HISTORY, catfile($cachedir, $history))
+                or die "Error: couldn't open " . catfile($cachedir, $history);
             while (<HISTORY>) {
                 chomp;
 
@@ -173,7 +192,7 @@ foreach my $cacheroot (@cacheroots) {
             # assign values for template
             #
 			push @{$data{sites}}, {
-                'name'             => $cachedir,
+                'name'             => $sitedomain,
                 'configname'       => $configname,
                 'visitors'         => $visitors,
                 'visits'           => $visits,
@@ -182,9 +201,7 @@ foreach my $cacheroot (@cacheroots) {
                 'bandwidth'        => $bandwidth,
                 'bandwidth_suffix' => $bandwidth_suffix,
                 'lastupdate'       => $lastupdate,
-            }
-
-            
+            };
 		}
 	}
 }
