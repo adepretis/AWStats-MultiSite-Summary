@@ -2,11 +2,11 @@
 
 ###############################################################################
 #
-# AWStats MultiSite Summary 0.2
+# AWStats MultiSite Summary 0.4
 #
 # For more information please have a look at http://www.25th-floor.com/oss
 #
-# Copyright 2004 25th-floor de Pretis & Helmberger KEG
+# Copyright 2004-2005 25th-floor de Pretis & Helmberger KEG
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ use Template;
 use Math::Round::Var;
 use File::Slurp;
 use Switch;
+use CGI qw/:cgi/;
 
 use constant TRUE => 1;
 use constant FALSE => 0;
@@ -47,52 +48,46 @@ my $template_root = '_system/templates';            # Template basedir (relative
 
 ################# No need to change anything below this line ##################
 
-#
 # Variables
-#
 my $content = '';
+my %params = ();
 my %data = (
     'awstats' => $awstats_uri,
-    'version' => '0.2',
+    'version' => '0.4',
     'sites'   => [],
 );
 
-#
 # Instance Template-Toolkit object
-#
 my $tt ||= Template->new(
     ABSOLUTE     => 1,
     COMPILE_EXT  => '.ttc',
     COMPILE_DIR  => '/tmp/ttc',
 ) or die Template::ERROR();
 
-#
 # instance various objects
-#
 my $rounder = Math::Round::Var::Float->new(precision => 2);
+my $cgi = CGI->new();
 
-#
 # get user information
-#
 $data{username} = $ENV{REMOTE_USER} || die "Error: no username given";
 
-#
+# check for params
+_parse_params();
+
 # get available config files
-#
 my @files = File::Find::Rule->file
                             ->name("awstats.*?\.conf")
                             ->relative
                             ->in($awstats_config_dir);
 
 foreach my $configfile (@files) {
-    #
     # slurp configuration file
-    #
-    my @file = read_file(catfile($awstats_config_dir, $configfile));
+    my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
+    
+    # don't die but warn if permission denied
+    push @{$data{errors}} ,$@ if ($@);
 
-    #
     # check for allowed users containing current user
-    #
     if (grep /^AllowAccessFromWebToFollowingAuthenticatedUsers=".*$data{username}.*?"/, @file) {
         my $configname = '';
         my $cachedir = '';
@@ -136,7 +131,7 @@ foreach my $configfile (@files) {
             # history file)
             #
             open (HISTORY, catfile($cachedir, $history))
-                or die "Error: couldn't open " . catfile($cachedir, $history);
+                or die "Error: couldn't open " . catfile($cachedir, $history). ": $!";
             while (<HISTORY>) {
                 chomp;
 
@@ -206,7 +201,14 @@ foreach my $configfile (@files) {
 	}
 }
 
-@{$data{sites}} = sort( { $$a{name} cmp $$b{name} } @{$data{sites}} );
+# sort list
+if ($params{s}) {
+    @{$data{sites}} = ($params{t} eq 'alnum')
+        ? sort { $$a{$params{s}} cmp $$b{$params{s}} } @{$data{sites}}
+        : reverse sort { $$a{$params{s}} <=> $$b{$params{s}} } @{$data{sites}};
+} else {
+    @{$data{sites}} = sort { $$a{name} cmp $$b{name} } @{$data{sites}};
+}
 
 if (!scalar @{$data{sites}}) {
     #
@@ -218,7 +220,7 @@ if (!scalar @{$data{sites}}) {
     #
     # User has only one site configured - redirect to awstats
     #
-    print "Location: $data{awstats}?config=$data{configname}\n\n";
+    print "Location: $data{awstats}?config=$data{sites}[0]{configname}\n\n";
     exit 0
 } else {
     #
@@ -236,3 +238,21 @@ print $content;
 
 exit 0;
 
+
+# parse parameters
+sub _parse_params {
+    my %param;
+    
+    foreach ($cgi->param) {
+        my @values = $cgi->param($_);
+
+        foreach my $value (@values) {
+            $param{$_}{$value}++;
+        }
+    }
+
+    while (my ($key, $value) = each %param) {
+        my @keys = keys %{$value};
+        $params{$key} = (scalar @keys == 1) ? $keys[0] : \@keys;
+    }
+}
