@@ -65,7 +65,7 @@
         </tr>
         [%- FOREACH site = sites %]
           <tr>
-            <td><a href="[% awstats %]?config=[% site.configname %]" onMouseover="window.status='Statistics for [% site.name %]'; return true;" onMouseout="window.status=''; return true;">[% site.name %]</td>
+            <td nowrap><a href="[% awstats %]?config=[% site.configname %]" onMouseover="window.status='Statistics for [% site.name %]'; return true;" onMouseout="window.status=''; return true;">[% site.name %]</td>
             <td align="right">[% site.visitors %]</td>
             <td align="right">[% site.visits %]</td>
             <td align="right">[% site.pages %]</td>
