@@ -110,7 +110,7 @@ foreach my $cacheroot (@cacheroots) {
             #
             # get configuration name (used for linking to correct statistic)
             #
-            ($configname = shift @files) =~ s/awstats[0-9]+\.(.*?)\.txt/$1/;
+            ($configname = $files[-1]) =~ s/awstats[0-9]+\.(.*?)\.txt/$1/;
             
             #
             # get overall statistical values (from last array element = last modified
