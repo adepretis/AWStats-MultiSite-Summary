@@ -206,6 +206,8 @@ foreach my $configfile (@files) {
 	}
 }
 
+@{$data{sites}} = sort( { $$a{name} cmp $$b{name} } @{$data{sites}} );
+
 if (!scalar @{$data{sites}}) {
     #
     # User has no site configured - show an error page
@@ -216,7 +218,7 @@ if (!scalar @{$data{sites}}) {
     #
     # User has only one site configured - redirect to awstats
     #
-    print "Location: $data{awstats}?config=$data{username}\n\n";
+    print "Location: $data{awstats}?config=$data{configname}\n\n";
     exit 0
 } else {
     #
