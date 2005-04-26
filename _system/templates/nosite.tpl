@@ -27,6 +27,11 @@
          padding         : 0px;
          text-align      : left;
       }
+
+      p.disclaimer {
+         font            : 10px/1.2 Verdana, Arial, Helvetica, Sans-Serif;
+         text-align      : center;
+      }
       -->
     </style>
   </head>
