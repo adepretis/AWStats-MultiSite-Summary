@@ -1,0 +1,82 @@
+
+                          AWStats MultiSite Summary
+
+                                 Version 1.5
+
+          Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
+                             All rights reserved.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 59 Temple 
+Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+
+QUICK START
+===========
+
+The latest version of AWStats MultiSite Summar can be retrieved from:
+
+    http://www.25th-floor.com/oss/projects/AWStats-MultiSite-Summary
+
+To install AWStats MultiSite Summary:
+
+    cd /path/to/DocumentRoot
+    tar xvf AWStats-MultiSite-Summary-1.5.tar.gz
+    mv AWStats-MultiSite-Summary-1.5/* .
+
+
+Configure Apache:
+-----------------
+
+
+
+REQUIREMENTS
+============
+
+AWStats MultiSite Summary has been tested with Perl 5.8.x and will most likely
+work with all Perl5 versions.
+
+The following modules are required and have to be installed. You can find them
+all on CPAN:
+
+
+    CGI
+    File::Find::Rule
+    File::Slurp
+    Math::Round::Var
+    Template Toolkit (see http://www.tt2.org)
+
+
+
+SUPPORT
+=======
+
+Our mailing list provides a forum for discussing issues relating to the use and
+of AWStats MultiSite Summary.
+
+To subscribe to the mailing list send an email to:
+
+    awstats-mss-subscribe@25th-floor.com
+
+with an empty message body. You can also use the web· interface to subscribe or
+browse the archives:
+
+    http://lists.25th-floor.com/wwsympa.fcgi/info/awstats-mss
+
+
+
+AUTHOR
+======
+
+AWStats MultiSite Summary was written by Andreas de Pretis <andreas@depretis.at>
+
