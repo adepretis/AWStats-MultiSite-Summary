@@ -1,7 +1,7 @@
 
                           AWStats MultiSite Summary
 
-                                 Version 1.5
+                                 Version 1.6
 
           Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
                              All rights reserved.
@@ -21,6 +21,29 @@ Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
+OVERVIEW
+========
+
+What is and does AWStats MultiSite Summary exactly? Unlike other AWStats addons
+this little tool summarizes multiple sites in a clear and compact way on a per
+month and user basis.
+
+It depends on the following AWStats settings for each site:
+
+    AllowAccessFromWebToAuthenticatedUsersOnly=1
+    AllowAccessFromWebToFollowingAuthenticatedUsers="user1 user2 user3"
+
+and a seperate Apache VirtualHost (might work as subdirectory installation too)
+to act as centralized AWStats "portal" (see "Apache Configuration" below).
+
+To see a working online demo please go to:
+
+    https://stats.25th-floor.com
+
+and login as "awstats-mss-demo" with password "demo".
+
+
+
 QUICK START
 ===========
 
@@ -31,12 +54,55 @@ The latest version of AWStats MultiSite Summar can be retrieved from:
 To install AWStats MultiSite Summary:
 
     cd /path/to/DocumentRoot
-    tar xvf AWStats-MultiSite-Summary-1.5.tar.gz
-    mv AWStats-MultiSite-Summary-1.5/* .
+    tar xvf AWStats-MultiSite-Summary-1.6.tar.gz
+    mv AWStats-MultiSite-Summary-1.6/* .
+
+Additionally AWStats' "awstats.pl" has to be copied to
+/path/to/DocumentRoot too so AWStats MultiSite Summary can link to it from the
+summary page.
 
 
-Configure Apache:
------------------
+Configuring AWStats:
+--------------------
+
+
+Configuring Apache:
+-------------------
+
+It is strongly advised that you create a seperate Apache VirtualHost as
+centralized AWStats "portal" like e.g.
+
+    http://stats.yoursite.com
+
+Most important is however that you enable HTTP Authentication (Basic or Digest)
+for the VirtualHost (or the Location/Directory if you prefer so). The users you
+add to your UserFile (.htaccess, mod_auth_ldap, ...) have to be identical with
+the ones you define in the respective sites' AWStats configuration file.
+
+AWStats MultiSite Summary as well as AWStats itself are written in Perl so you
+will have to enable CGI support for the DocumentRoot (see example VirtualHost).
+
+An example Apache VirtualHost would look like:
+
+    <VirtualHost 127.0.0.1:80>
+      ServerName stats.yoursite.com
+      ServerAdmin webmaster@yoursite.com
+
+      DocumentRoot /path/to/DocumentRoot
+
+      ErrorLog /var/log/httpd/stats_yoursite.error_log
+      CustomLog /var/log/httpd/stats_yoursite.access_log combined
+
+      <Directory /path/to/DocumentRoot>
+        AuthName "HTTP Statistics"
+        AuthType Basic
+        AuthUserFile /etc/httpd/auth/.stats.yoursite.com
+        require valid-user
+
+        Options +ExecCGI
+        AddHandler cgi-script .pl
+      </Directory
+    </VirtualHost>
 
 
 
@@ -46,15 +112,15 @@ REQUIREMENTS
 AWStats MultiSite Summary has been tested with Perl 5.8.x and will most likely
 work with all Perl5 versions.
 
-The following modules are required and have to be installed. You can find them
+Besides of course AWStats 6.x (earlier versions will work too eventually) the
+following Perl modules are required and have to be installed. You can find them
 all on CPAN:
-
 
     CGI
     File::Find::Rule
     File::Slurp
     Math::Round::Var
-    Template Toolkit (see http://www.tt2.org)
+    Template Toolkit (see also http://www.tt2.org)
 
 
 
@@ -72,6 +138,10 @@ with an empty message body. You can also use the web· interface to subscribe or
 browse the archives:
 
     http://lists.25th-floor.com/wwsympa.fcgi/info/awstats-mss
+
+Please don't hesitate to report Bugs at:
+
+    http://bugtraq.25th-floor.com
 
 
 
