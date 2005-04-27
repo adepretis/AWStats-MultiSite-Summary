@@ -2,7 +2,7 @@
 #
 #                         AWStats MultiSite Summary
 #
-#                                Version 1.6
+#                                Version 1.7
 #
 #         Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
 #                            All rights reserved.
@@ -25,6 +25,7 @@ use warnings;
 
 use File::Spec::Functions;
 use File::Find::Rule;
+use FindBin;
 use Template;
 use Math::Round::Var;
 use File::Slurp;
@@ -37,9 +38,9 @@ use constant FALSE => 0;
 #
 # Configuration
 #
-my $awstats_config_dir = '/etc/awstats';            # directory where AWStats config files are stored
-my $awstats_uri = '/awstats.pl';                    # URI to awstats.pl
-my $template_root = '_system/templates';            # Template basedir (relative or absolute)
+my $awstats_config_dir = '/etc/awstats';                    # directory where AWStats config files are stored
+my $awstats_uri = '/awstats.pl';                            # URI to awstats.pl
+my $template_root = $FindBin::Bin . '/_system/templates';   # Template basedir (relative or absolute)
 
 
 ################# No need to change anything below this line ##################
@@ -49,7 +50,7 @@ my $content = '';
 my %params = ();
 my %data = (
     'awstats' => $awstats_uri,
-    'version' => '0.4',
+    'version' => '1.7',
     'sites'   => [],
 );
 
@@ -58,6 +59,7 @@ my $tt ||= Template->new(
     ABSOLUTE     => 1,
     COMPILE_EXT  => '.ttc',
     COMPILE_DIR  => '/tmp/ttc',
+    INCLUDE_PATH => $template_root,
 ) or die Template::ERROR();
 
 # instance various objects
@@ -210,7 +212,7 @@ if (!scalar @{$data{sites}}) {
     #
     # User has no site configured - show an error page
     #
-    $tt->process($template_root . '/nosite.tpl', \%data, \$content)
+    $tt->process('nosite.tpl', \%data, \$content)
         or die $tt->error();
 } elsif (@{$data{sites}} == 1) {
     #
@@ -222,7 +224,7 @@ if (!scalar @{$data{sites}}) {
     #
     # User has more than one site configured - show the overview
     #
-    $tt->process($template_root . '/overview.tpl', \%data, \$content)
+    $tt->process('overview.tpl', \%data, \$content)
         or die $tt->error();
 }
 
