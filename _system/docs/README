@@ -1,7 +1,7 @@
 
                           AWStats MultiSite Summary
 
-                                 Version 1.6
+                                 Version 1.7
 
           Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
                              All rights reserved.
@@ -21,12 +21,27 @@ Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 
-OVERVIEW
-========
+INDEX
+=====
+
+1. Overview
+2. Quick Start
+  2.1 Configuring AWStats MultiSite Summary
+  2.1 Configuring AWStats
+  2.2 Configuring Apache
+3. How it works
+4. Requirements
+5. Support
+6. Author
+
+
+
+1. OVERVIEW
+===========
 
 What is and does AWStats MultiSite Summary exactly? Unlike other AWStats addons
 this little tool summarizes multiple sites in a clear and compact way on a per
-month and user basis.
+month and a per user basis.
 
 It depends on the following AWStats settings for each site:
 
@@ -44,30 +59,75 @@ and login as "awstats-mss-demo" with password "demo".
 
 
 
-QUICK START
-===========
+2. QUICK START
+==============
 
-The latest version of AWStats MultiSite Summar can be retrieved from:
+The latest version of AWStats MultiSite Summary can be retrieved from:
 
     http://www.25th-floor.com/oss/projects/AWStats-MultiSite-Summary
 
 To install AWStats MultiSite Summary:
 
     cd /path/to/DocumentRoot
-    tar xvf AWStats-MultiSite-Summary-1.6.tar.gz
-    mv AWStats-MultiSite-Summary-1.6/* .
+    tar xvf AWStats-MultiSite-Summary-1.7.tar.gz
+    mv AWStats-MultiSite-Summary-1.7/* .
 
 Additionally AWStats' "awstats.pl" has to be copied to
-/path/to/DocumentRoot too so AWStats MultiSite Summary can link to it from the
-summary page.
+/path/to/DocumentRoot so AWStats MultiSite Summary can link to it from its
+summary page. Creating a symlink might works too - depending on your
+Apache/VirtualHost configuration.
 
 
-Configuring AWStats:
---------------------
+2.1 Configure AWStats MultiSite Summary
+---------------------------------------
+
+Edit 'index.pl' and change the following values to suit your needs. Default
+values are:
+
+    my $awstats_config_dir = '/etc/awstats';
+    my $awstats_uri        = '/awstats.pl';
+    my $template_root      = '_system/templates';
+
+NOTE: AWStats MSS (= the user your Apache is running as) needs read access to
+      both the directory containinig AWStats configuration files and the
+      corresponding "CacheDir".
 
 
-Configuring Apache:
--------------------
+2.2 Configuring AWStats
+-----------------------
+
+Besides a seperate AWStats configuration file for each site to be analyzed it
+is strongly adviced to use
+
+    awstats.model.conf
+
+to configure default values and e.g.
+
+    awstats.sitename.conf
+
+to override these default values on a per site basis. Just add the following
+line at the beginning of each site configuration file:
+
+    Include "/path/to/awstats.model.conf"
+
+As mentioned above for each site these parameters have to be set:
+
+    AllowAccessFromWebToAuthenticatedUsersOnly=1
+    AllowAccessFromWebToFollowingAuthenticatedUsers="user1 user2 user3"
+
+User(s) defined here must be able to login on your AWStats "portal" (see
+Configuring Apache below) via HTTP Authentication and will then get an overview
+of all sites analysis he is allowed to access.
+
+This way you can e.g. define a user who's allowed to access all available site
+analysis.
+
+If there's not more than one site configured for an authenticated users he will
+be instantaneous redirected directly to the corresponding AWStats report.
+
+
+2.3 Configuring Apache
+----------------------
 
 It is strongly advised that you create a seperate Apache VirtualHost as
 centralized AWStats "portal" like e.g.
@@ -104,17 +164,36 @@ An example Apache VirtualHost would look like:
       </Directory
     </VirtualHost>
 
+For information about how to create and maintain the AuthUserFile please see
+the Apache documentation at
+
+    http://httpd.apache.org/docs/mod/mod_auth.html#authuserfile
 
 
-REQUIREMENTS
-============
+
+3. HOW IT WORKS
+===============
+
+AWStats MultiSite Summary matches the authenticated user (HTTP Authentication)
+with available site configuration files in e.g. /etc/awstats. If a match
+occures it opens the file, reads some configuration values and tries to open
+the latest corresponding AWStats cache file in "CacheDir" to get some values
+for summarization.
+
+If no cache file can be found (e.g. AWStats hasn't analyzed a site yet) the
+site will not be visibile in the summary.
+
+
+
+4. REQUIREMENTS
+===============
 
 AWStats MultiSite Summary has been tested with Perl 5.8.x and will most likely
 work with all Perl5 versions.
 
-Besides of course AWStats 6.x (earlier versions will work too eventually) the
+Besides AWStats 6.x itself (earlier versions will work too eventually) the
 following Perl modules are required and have to be installed. You can find them
-all on CPAN:
+all on CPAN (http://search.cpan.org):
 
     CGI
     File::Find::Rule
@@ -124,8 +203,8 @@ all on CPAN:
 
 
 
-SUPPORT
-=======
+5. SUPPORT
+==========
 
 Our mailing list provides a forum for discussing issues relating to the use and
 of AWStats MultiSite Summary.
@@ -139,14 +218,19 @@ browse the archives:
 
     http://lists.25th-floor.com/wwsympa.fcgi/info/awstats-mss
 
-Please don't hesitate to report Bugs at:
+Please don't hesitate to report bugs at:
 
     http://bugtraq.25th-floor.com
 
+For up-to-date documentation and screenshots please visit our Wiki at
+
+    http://www.25th-floor.com/wiki/oss/awstats_mss
 
 
-AUTHOR
-======
+
+6. AUTHOR
+=========
 
 AWStats MultiSite Summary was written by Andreas de Pretis <andreas@depretis.at>
+for 25th-floor - de Pretis & Helmberger KEG <oss@25th-floor.com>.
 
