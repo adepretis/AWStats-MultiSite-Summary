@@ -86,7 +86,7 @@ foreach my $configfile (@files) {
     push @{$data{errors}} ,$@ if ($@);
 
     # check for allowed users containing current user
-    if (grep /^AllowAccessFromWebToFollowingAuthenticatedUsers=".*$data{username}.*?"/, @file) {
+    if (grep /^AllowAccessFromWebToFollowingAuthenticatedUsers=".*$data{username}(\s+|")/, @file) {
         my $configname = '';
         my $cachedir = '';
         my $sitedomain = '';
