@@ -1,7 +1,7 @@
 
                           AWStats MultiSite Summary
 
-                                 Version 1.7
+                                 Version 1.8
 
           Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
                              All rights reserved.
@@ -69,8 +69,8 @@ The latest version of AWStats MultiSite Summary can be retrieved from:
 To install AWStats MultiSite Summary:
 
     cd /path/to/DocumentRoot
-    tar xvf AWStats-MultiSite-Summary-1.7.tar.gz
-    mv AWStats-MultiSite-Summary-1.7/* .
+    tar xvf AWStats-MultiSite-Summary-1.8.tar.gz
+    mv AWStats-MultiSite-Summary-1.8/* .
 
 Additionally AWStats' "awstats.pl" has to be copied to
 /path/to/DocumentRoot so AWStats MultiSite Summary can link to it from its
