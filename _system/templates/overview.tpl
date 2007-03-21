@@ -78,8 +78,8 @@
           <td class="header" width="75" bgcolor="#F8E880"><a href="?s=visits" class="header">Number of visits</a></td>
           <td class="header" width="75" bgcolor="#4477DD"><a href="?s=pages" class="header">Pages</a></td>
           <td class="header" width="75" bgcolor="#66F0FF"><a href="?s=hits" class="header">Hits</a></td>
-          <td class="header" width="75" bgcolor="#2EA495">Bandwidth</td>
-          <td class="header" width="75" bgcolor="#ECECEC">Last<br>Update<td>
+          <td class="header" width="75" bgcolor="#2EA495"><a href="?s=bandwidth_bytes" class="header">Bandwidth</a></td>
+          <td class="header" width="75" bgcolor="#ECECEC"><a href="?s=lastupdate&t=alnum" class="header">Last<br>Update</a><td>
         </tr>
         [%- FOREACH site = sites %]
           <tr>
