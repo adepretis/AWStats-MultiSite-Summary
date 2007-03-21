@@ -1,0 +1,7 @@
+== Version 1.8 ==
+
++ added: sorting by "Last Update"
++ added: sorting by "Bandwidth"
++ fixed: issues when multiple AWStats sites share the same "DataDir" (thx to Austin Markus for reporting this)
++ fixed: regexp for user evaluation (foobar and foobarbaz wheren't recognized as different users)
++ fixed: some typos in nosite.tpl
