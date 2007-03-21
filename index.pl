@@ -2,9 +2,9 @@
 #
 #                         AWStats MultiSite Summary
 #
-#                                Version 1.7
+#                                Version 1.8
 #
-#         Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
+#     Copyright (C) 2004 - 2006 25th-floor - de Pretis & Helmberger KEG.
 #                            All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -50,7 +50,7 @@ my $content = '';
 my %params = ();
 my %data = (
     'awstats' => $awstats_uri,
-    'version' => '1.7',
+    'version' => '1.8',
     'sites'   => [],
 );
 
@@ -81,7 +81,7 @@ my @files = File::Find::Rule->file
 foreach my $configfile (@files) {
     # slurp configuration file
     my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
-    
+
     # don't die but warn if permission denied
     push @{$data{errors}} ,$@ if ($@);
 
@@ -105,14 +105,14 @@ foreach my $configfile (@files) {
         #
         # process awstats cache dir (get the most actual history file)
         #
-		if (my $history = (
+        if (my $history = (
                         map { $_->[0] }
                         sort { $a->[1] <=> $b->[1] }
                         map { [$_, ((stat catfile($cachedir, $_))[9])]; }
                         File::Find::Rule->file
-		                    ->name("awstats[0-9]*.txt")
+                            ->name("awstats[0-9]*.$configname.txt")
                             ->relative
-	                        ->in($cachedir)
+                            ->in($cachedir)
                         )[-1]) {
 
             my $visitors = 0;
@@ -120,6 +120,7 @@ foreach my $configfile (@files) {
             my $pages = 0;
             my $hits = 0;
             my $bandwidth = 0;
+            my $bandwidth_bytes = 0;
             my $bandwidth_suffix = 'B';
             my $lastupdate = 'n/a';
             my $startacc = FALSE;
@@ -156,7 +157,7 @@ foreach my $configfile (@files) {
 
                     $pages += $values[1];
                     $hits += $values[2];
-                    $bandwidth += $values[3];
+                    $bandwidth_bytes = $bandwidth += $values[3];
                 }
             }
             close(HISTORY);
@@ -167,7 +168,7 @@ foreach my $configfile (@files) {
             for (1..3) {
                 if ($bandwidth / 1024 >= 1) {
                     $bandwidth = $rounder->round($bandwidth / 1024);
-                    
+
                     switch ($_) {
                         case 1  { $bandwidth_suffix = 'Kb' }
                         case 2  { $bandwidth_suffix = 'Mb' }
@@ -184,7 +185,7 @@ foreach my $configfile (@files) {
             #
             # assign values for template
             #
-			push @{$data{sites}}, {
+            push @{$data{sites}}, {
                 'name'             => $sitedomain,
                 'configname'       => $configname,
                 'visitors'         => $visitors,
@@ -192,11 +193,12 @@ foreach my $configfile (@files) {
                 'pages'            => $pages,
                 'hits'             => $hits,
                 'bandwidth'        => $bandwidth,
+                'bandwidth_bytes'  => $bandwidth_bytes,
                 'bandwidth_suffix' => $bandwidth_suffix,
                 'lastupdate'       => $lastupdate,
             };
-		}
-	}
+        }
+    }
 }
 
 # sort list
