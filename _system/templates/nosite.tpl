@@ -41,7 +41,7 @@
     <div id="content">
       <h1>AWStats MultiSite Summary<br>for user "[% username %]"</h1>
 
-      <p>Sorry, no definition was found for use "[% username %]". Either the user is abandoned or there where not statistics generated yet. Concerning the latter please try again in 24 hours</p>
+      <p>Sorry, no AWStats site was found for user "[% username %]". Either the user is abandoned or there where no statistics generated yet. Concerning the latter please try again in 24 hours.</p>
       [% INCLUDE footer.tpl %]
     </div>
 
