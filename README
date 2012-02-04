@@ -3,7 +3,8 @@
 
                                  Version 1.8
 
-          Copyright (C) 2005 25th-floor - de Pretis & Helmberger KEG.
+                          Copyright (C) 2005 - 2012
+                   25th-floor - de Pretis & Helmberger KG.
                              All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under
@@ -32,7 +33,6 @@ INDEX
 3. How it works
 4. Requirements
 5. Support
-6. Author
 
 
 
@@ -221,16 +221,3 @@ browse the archives:
 Please don't hesitate to report bugs at:
 
     http://bugtraq.25th-floor.com
-
-For up-to-date documentation and screenshots please visit our Wiki at
-
-    http://www.25th-floor.com/wiki/oss/awstats_mss
-
-
-
-6. AUTHOR
-=========
-
-AWStats MultiSite Summary was written by Andreas de Pretis <andreas@depretis.at>
-for 25th-floor - de Pretis & Helmberger KEG <oss@25th-floor.com>.
-
