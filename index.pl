@@ -82,6 +82,20 @@ foreach my $configfile (@files) {
     # slurp configuration file
     my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
 
+    # check for included config files
+    foreach my $line ( @file ) {
+        if ( $line =~ /^Include\s+"(.+)"/ ) {
+            my $include = $1;
+            if ( $include !~ /^\// ) {
+                # relative path; append config dir
+                $include = catfile($awstats_config_dir, $include);
+            }
+            my @includefile = eval { read_file($include) };
+            # XXX this doesn't take into account overriding / appending options
+            push @file, @includefile; 
+        }
+    }
+
     # don't die but warn if permission denied
     push @{$data{errors}} ,$@ if ($@);
 
@@ -123,6 +137,7 @@ foreach my $configfile (@files) {
             my $bandwidth_bytes = 0;
             my $bandwidth_suffix = 'B';
             my $lastupdate = 'n/a';
+            my $lasttime = 'n/a';
             my $startacc = FALSE;
 
             #
@@ -140,6 +155,8 @@ foreach my $configfile (@files) {
                     if ($_ =~ m/^TotalVisits/);
                 ($lastupdate = (split /\s+/, $_)[1]) =~ s/LastUpdate\s+([0-9]+)/$1/
                     if ($_ =~ m/^LastUpdate/);
+                ($lasttime = (split /\s+/, $_)[1]) =~ s/LastTime\s+([0-9]+)/$1/
+                    if ($_ =~ m/^LastTime/);
 
                 #
                 # accumulate values (pages, hits, bandwidth)
@@ -183,6 +200,11 @@ foreach my $configfile (@files) {
             $lastupdate =~ s/([0-9]{4})([0-9]{2})([0-9]{2}).*/$1-$2-$3/;
 
             #
+            # modify lasttime date
+            #
+            $lasttime =~ s/([0-9]{4})([0-9]{2})([0-9]{2}).*/$1-$2-$3/;
+
+            #
             # assign values for template
             #
             push @{$data{sites}}, {
@@ -196,6 +218,7 @@ foreach my $configfile (@files) {
                 'bandwidth_bytes'  => $bandwidth_bytes,
                 'bandwidth_suffix' => $bandwidth_suffix,
                 'lastupdate'       => $lastupdate,
+                'lasttime'         => $lasttime,
             };
         }
     }
