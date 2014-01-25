@@ -79,6 +79,7 @@
           <td class="header" width="75" bgcolor="#4477DD"><a href="?s=pages" class="header">Pages</a></td>
           <td class="header" width="75" bgcolor="#66F0FF"><a href="?s=hits" class="header">Hits</a></td>
           <td class="header" width="75" bgcolor="#2EA495"><a href="?s=bandwidth_bytes" class="header">Bandwidth</a></td>
+          <td class="header" width="75" bgcolor="#ECECEC"><a href="?s=lasttime&t=alnum" class="header">Last<br>Access</a></td>
           <td class="header" width="75" bgcolor="#ECECEC"><a href="?s=lastupdate&t=alnum" class="header">Last<br>Update</a></td>
         </tr>
         [%- FOREACH site = sites %]
@@ -89,6 +90,7 @@
             <td align="right">[% site.pages %]</td>
             <td align="right">[% site.hits %]</td>
             <td align="right">[% site.bandwidth %] [% site.bandwidth_suffix %]</td>
+            <td align="right" nowrap>[% site.lasttime %]</td>
             <td align="right" nowrap>[% site.lastupdate %]</td>
           </tr>
         [%- END %]

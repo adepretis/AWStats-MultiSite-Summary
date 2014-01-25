@@ -137,6 +137,7 @@ foreach my $configfile (@files) {
             my $bandwidth_bytes = 0;
             my $bandwidth_suffix = 'B';
             my $lastupdate = 'n/a';
+            my $lasttime = 'n/a';
             my $startacc = FALSE;
 
             #
@@ -154,6 +155,8 @@ foreach my $configfile (@files) {
                     if ($_ =~ m/^TotalVisits/);
                 ($lastupdate = (split /\s+/, $_)[1]) =~ s/LastUpdate\s+([0-9]+)/$1/
                     if ($_ =~ m/^LastUpdate/);
+                ($lasttime = (split /\s+/, $_)[1]) =~ s/LastTime\s+([0-9]+)/$1/
+                    if ($_ =~ m/^LastTime/);
 
                 #
                 # accumulate values (pages, hits, bandwidth)
@@ -197,6 +200,11 @@ foreach my $configfile (@files) {
             $lastupdate =~ s/([0-9]{4})([0-9]{2})([0-9]{2}).*/$1-$2-$3/;
 
             #
+            # modify lasttime date
+            #
+            $lasttime =~ s/([0-9]{4})([0-9]{2})([0-9]{2}).*/$1-$2-$3/;
+
+            #
             # assign values for template
             #
             push @{$data{sites}}, {
@@ -210,6 +218,7 @@ foreach my $configfile (@files) {
                 'bandwidth_bytes'  => $bandwidth_bytes,
                 'bandwidth_suffix' => $bandwidth_suffix,
                 'lastupdate'       => $lastupdate,
+                'lasttime'         => $lasttime,
             };
         }
     }
