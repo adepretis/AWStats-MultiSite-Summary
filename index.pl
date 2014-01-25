@@ -82,6 +82,20 @@ foreach my $configfile (@files) {
     # slurp configuration file
     my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
 
+    # check for included config files
+    foreach my $line ( @file ) {
+        if ( $line =~ /^Include\s+"(.+)"/ ) {
+            my $include = $1;
+            if ( $include !~ /^\// ) {
+                # relative path; append config dir
+                $include = catfile($awstats_config_dir, $include);
+            }
+            my @includefile = eval { read_file($include) };
+            # XXX this doesn't take into account overriding / appending options
+            push @file, @includefile; 
+        }
+    }
+
     # don't die but warn if permission denied
     push @{$data{errors}} ,$@ if ($@);
 
