@@ -81,7 +81,7 @@ my @files = File::Find::Rule->file
 foreach my $configfile (@files) {
     # slurp configuration file
     my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
-    my @file_parsed = {};
+    my @file_parsed = ();
 
     # check for included config files
     foreach my $line ( @file ) {
