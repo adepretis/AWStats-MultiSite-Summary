@@ -81,9 +81,12 @@ my @files = File::Find::Rule->file
 foreach my $configfile (@files) {
     # slurp configuration file
     my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
+    my @file_parsed = {};
 
     # check for included config files
     foreach my $line ( @file ) {
+	push @file_parsed, $line;
+
         if ( $line =~ /^Include\s+"(.+)"/ ) {
             my $include = $1;
             if ( $include !~ /^\// ) {
@@ -91,9 +94,12 @@ foreach my $configfile (@files) {
                 $include = catfile($awstats_config_dir, $include);
             }
             my @includefile = eval { read_file($include) };
-            # XXX this doesn't take into account overriding / appending options
-            push @file, @includefile; 
+            push @file_parsed, @includefile;
         }
+    }
+
+    if ( scalar(@file_parsed) > 0 ) {
+        @file = @file_parsed;
     }
 
     # don't die but warn if permission denied
