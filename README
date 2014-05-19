@@ -1,10 +1,11 @@
 
                           AWStats MultiSite Summary
 
-                                 Version 1.8
+                                 Version 1.8.1
 
-                          Copyright (C) 2005 - 2012
-                   25th-floor - de Pretis & Helmberger KG.
+     Copyright (C) 2004 - 2013 25th-floor - de Pretis & Helmberger KEG.
+     Copyright (C) 2014 - 25th-floor GmbH
+
                              All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under
@@ -64,13 +65,13 @@ and login as "awstats-mss-demo" with password "demo".
 
 The latest version of AWStats MultiSite Summary can be retrieved from:
 
-    http://www.25th-floor.com/oss/projects/AWStats-MultiSite-Summary
+https://github.com/25th-floor/AWStats-MultiSite-Summary/archive/master.zip
 
 To install AWStats MultiSite Summary:
 
     cd /path/to/DocumentRoot
-    tar xvf AWStats-MultiSite-Summary-1.8.tar.gz
-    mv AWStats-MultiSite-Summary-1.8/* .
+    unzip master.zip
+    mv AWStats-MultiSite-Summary-master/* .
 
 Additionally AWStats' "awstats.pl" has to be copied to
 /path/to/DocumentRoot so AWStats MultiSite Summary can link to it from its

@@ -2,9 +2,11 @@
 #
 #                         AWStats MultiSite Summary
 #
-#                                Version 1.8
+#                                Version 1.8.1
 #
-#     Copyright (C) 2004 - 2006 25th-floor - de Pretis & Helmberger KEG.
+#     Copyright (C) 2004 - 2013 25th-floor - de Pretis & Helmberger KEG.
+#     Copyright (C) 2014 - 25th-floor GmbH
+#
 #                            All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -50,7 +52,7 @@ my $content = '';
 my %params = ();
 my %data = (
     'awstats' => $awstats_uri,
-    'version' => '1.8',
+    'version' => '1.8.1',
     'sites'   => [],
 );
 
