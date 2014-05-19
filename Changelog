@@ -1,3 +1,8 @@
+== Version 1.8.1 ==
+
++ fixed incorrect redirect if only 1 domain exists for the current user
++ updated copyright and README (github download)
+
 == Version 1.8 ==
 
 + added: sorting by "Last Update"
