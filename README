@@ -201,24 +201,3 @@ all on CPAN (http://search.cpan.org):
     File::Slurp
     Math::Round::Var
     Template Toolkit (see also http://www.tt2.org)
-
-
-
-5. SUPPORT
-==========
-
-Our mailing list provides a forum for discussing issues relating to the use and
-of AWStats MultiSite Summary.
-
-To subscribe to the mailing list send an email to:
-
-    awstats-mss-subscribe@25th-floor.com
-
-with an empty message body. You can also use the web· interface to subscribe or
-browse the archives:
-
-    http://lists.25th-floor.com/wwsympa.fcgi/info/awstats-mss
-
-Please don't hesitate to report bugs at:
-
-    http://bugtraq.25th-floor.com
