@@ -249,7 +249,7 @@ if (!scalar @{$data{sites}}) {
     #
     # User has only one site configured - redirect to awstats
     #
-    print "Location: $data{awstats}?config=$data{sites}[0]{configname}\n\n";
+    print(redirect(-uri => "$data{awstats}?config=$data{sites}[0]{configname}", -status => 301));
     exit 0
 } else {
     #
