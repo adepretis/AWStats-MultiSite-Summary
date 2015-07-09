@@ -78,49 +78,26 @@ my @files = File::Find::Rule->file
                             ->relative
                             ->in($awstats_config_dir);
 
+my $cachedir = '';
+my $sitedomain = '';
+my $authenticated = 0;
+my $configname = '';
+
 foreach my $configfile (@files) {
-    # slurp configuration file
-    my @file = eval { read_file(catfile($awstats_config_dir, $configfile)) };
-    my @file_parsed = ();
 
-    # check for included config files
-    foreach my $line ( @file ) {
-	push @file_parsed, $line;
+    $cachedir = '';
+    $sitedomain = '';
+    $authenticated = 0;
 
-        if ( $line =~ /^Include\s+"(.+)"/ ) {
-            my $include = $1;
-            if ( $include !~ /^\// ) {
-                # relative path; append config dir
-                $include = catfile($awstats_config_dir, $include);
-            }
-            my @includefile = eval { read_file($include) };
-            push @file_parsed, @includefile;
-        }
-    }
+    #
+    # extract config name for direct linking
+    #
+    ($configname = $configfile) =~ s/awstats\.(.*?)\.conf/$1/;
 
-    if ( scalar(@file_parsed) > 0 ) {
-        @file = @file_parsed;
-    }
-
-    # don't die but warn if permission denied
-    push @{$data{errors}} ,$@ if ($@);
+    parse_config(catfile($awstats_config_dir, $configfile));
 
     # check for allowed users containing current user
-    if (grep /^AllowAccessFromWebToFollowingAuthenticatedUsers=".*$data{username}(\s+|")/, @file) {
-        my $configname = '';
-        my $cachedir = '';
-        my $sitedomain = '';
-
-        #
-        # extract config name for direct linking
-        #
-        ($configname = $configfile) =~ s/awstats\.(.*?)\.conf/$1/;
-
-        #
-        # get specific needed configfile values
-        #
-        map { chomp; ($cachedir = $_) =~ s/^DirData="(.*?)".*/$1/ } grep(/^DirData=".*?"/, @file);
-        map { chomp; ($sitedomain = $_) =~ s/^SiteDomain="(.*?)".*/$1/ } grep(/^SiteDomain=".*?"/, @file);
+    if ($authenticated == 2) {
 
         #
         # process awstats cache dir (get the most actual history file)
@@ -271,7 +248,7 @@ exit 0;
 # parse parameters
 sub _parse_params {
     my %param;
-    
+
     foreach ($cgi->param) {
         my @values = $cgi->param($_);
 
@@ -283,5 +260,38 @@ sub _parse_params {
     while (my ($key, $value) = each %param) {
         my @keys = keys %{$value};
         $params{$key} = (scalar @keys == 1) ? $keys[0] : \@keys;
+    }
+}
+
+sub parse_config {
+    my $configfile = shift(@_);
+
+#    print "Reading $configfile\n";
+
+    my @file = eval { read_file($configfile) };
+
+    # don't die but warn if permission denied
+    push @{$data{errors}} ,$@ if ($@);
+
+    foreach my $line (@file) {
+
+	if ($line =~ /^AllowAccessFromWebToAuthenticatedUsersOnly\s*=\s*0/) {
+	    $authenticated = 0;
+	}
+	if ($line =~ /^AllowAccessFromWebToAuthenticatedUsersOnly\s*=\s*1/) {
+	    $authenticated++;
+	}
+	if ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=\s*"$data{username}(\s+|")/) {
+	    $authenticated++;
+	}
+	if ($line =~ /^DirData\s*=\s*"([^"]+)"/) {
+	    $cachedir = $1;
+	}
+	if ($line =~ /^SiteDomain\s*=\s*"([^"]+)"/) {
+	    $sitedomain = $1;
+	}
+	if ($line =~ /^Include\s*"([^"]+)"/) {
+	    parse_config($1);
+	}
     }
 }
