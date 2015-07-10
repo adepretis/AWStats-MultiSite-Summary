@@ -80,7 +80,8 @@ my @files = File::Find::Rule->file
 
 my $cachedir = '';
 my $sitedomain = '';
-my $authenticated = 0;
+my $authrequired = FALSE;
+my $authenticated = FALSE;
 my $configname = '';
 
 foreach my $configfile (@files) {
@@ -97,7 +98,7 @@ foreach my $configfile (@files) {
     parse_config(catfile($awstats_config_dir, $configfile));
 
     # check for allowed users containing current user
-    if ($authenticated == 2) {
+    if ($authrequired && $authenticated) {
 
         #
         # process awstats cache dir (get the most actual history file)
@@ -276,13 +277,15 @@ sub parse_config {
     foreach my $line (@file) {
 
 	if ($line =~ /^AllowAccessFromWebToAuthenticatedUsersOnly\s*=\s*0/) {
-	    $authenticated = 0;
+	    $authrequired = FALSE;
 	}
 	if ($line =~ /^AllowAccessFromWebToAuthenticatedUsersOnly\s*=\s*1/) {
-	    $authenticated++;
+	    $authrequired = TRUE;
 	}
 	if ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=\s*"$data{username}(\s+|")/) {
-	    $authenticated++;
+	    $authenticated = TRUE;
+	} elsif ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=/) {
+	    $authenticated = FALSE;
 	}
 	if ($line =~ /^DirData\s*=\s*"([^"]+)"/) {
 	    $cachedir = $1;
