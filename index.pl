@@ -107,8 +107,8 @@ foreach my $configfile (@files) {
                         map { $_->[0] }
                         sort { $a->[1] <=> $b->[1] }
                         map { [$_, ((stat catfile($cachedir, $_))[9])]; }
-                        File::Find::Rule->file
-                            ->name("awstats[0-9]*.$configname.txt")
+                           File::Find::Rule->file
+                            ->name(qr/awstats[0-9]{6}.$configname.txt$/)
                             ->relative
                             ->in($cachedir)
                         )[-1]) {
