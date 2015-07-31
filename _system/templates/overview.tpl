@@ -6,6 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>AWStats MultiSite Summary for "[% username %]"</title>
+    [% IF refresh > 0 %]
+    <meta http-equiv="refresh" content="[% refresh %]">
+    [% END %]
     <meta http-equiv="Content-Style-Type" content="text/css" />
 
     <style type="text/css">
