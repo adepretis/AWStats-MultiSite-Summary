@@ -41,7 +41,7 @@ use constant FALSE => 0;
 my $awstats_config_dir = '/etc/awstats';                    # directory where AWStats config files are stored
 my $awstats_uri = '/awstats.pl';                            # URI to awstats.pl
 my $template_root = $FindBin::Bin . '/_system/templates';   # Template basedir (relative or absolute)
-my $refresh_interval = 600;                                 # http meta refresh, set to 0 to disable
+my $refresh_interval = 0;                                   # http meta refresh, set to 0 to disable
 
 ################# No need to change anything below this line ##################
 
