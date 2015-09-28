@@ -285,7 +285,7 @@ sub parse_config {
 	if ($line =~ /^AllowAccessFromWebToAuthenticatedUsersOnly\s*=\s*1/) {
 	    $authrequired = TRUE;
 	}
-	if ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=\s*"$data{username}(\s+|")/) {
+	if ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=\s*"([^"]+\s+)?$data{username}(\s+|")/) {
 	    $authenticated = TRUE;
 	} elsif ($line =~ /^AllowAccessFromWebToFollowingAuthenticatedUsers\s*=/) {
 	    $authenticated = FALSE;
