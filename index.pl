@@ -109,11 +109,8 @@ foreach my $configfile (@files) {
         if (my $history = (
                         map { $_->[0] }
                         sort { $a->[1] <=> $b->[1] }
-                        map { [$_, ((stat catfile($cachedir, $_))[9])]; }
-                           File::Find::Rule->file
-                            ->name(qr/awstats[0-9]{6}.$configname.txt$/)
-                            ->relative
-                            ->in($cachedir)
+                        map { [$_, ((stat $_)[9])]; }
+                        glob(catfile($cachedir, "awstats[0-9]*.$configname.txt"))
                         )[-1]) {
 
             my $visitors = 0;
@@ -131,8 +128,8 @@ foreach my $configfile (@files) {
             # get overall statistical values (from last array element = last modified
             # history file)
             #
-            open (HISTORY, catfile($cachedir, $history))
-                or die "Error: couldn't open " . catfile($cachedir, $history). ": $!";
+            open (HISTORY, $history)
+                or die "Error: couldn't open " . $history . ": $!";
             while (<HISTORY>) {
                 chomp;
 
