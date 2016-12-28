@@ -1,0 +1,23 @@
+DirCgi="/cgi-bin"
+
+# Possible values:
+#  0 - Never allowed
+#  1 - Allowed on CLI only, -Year- value in combo is not visible
+#  2 - Allowed on CLI only, -Year- value in combo is visible but not allowed
+#  3 - Possible on CLI and CGI
+# Default: 2
+#
+AllowFullYearView=3
+
+AllowAccessFromWebToAuthenticatedUsersOnly=1
+CreateDirDataIfNotExists=1
+DefaultFile="index.php index.html"
+
+# Examples for Apache combined logs (following two examples are equivalent):
+# LogFormat = 1
+# LogFormat = "%host %other %logname %time1 %methodurl %code %bytesd %refererquot %uaquot"
+#
+# Example for IIS:
+# LogFormat = 2
+#
+LogFormat=1
