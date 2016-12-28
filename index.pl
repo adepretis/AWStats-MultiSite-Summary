@@ -2,9 +2,9 @@
 #
 #                         AWStats MultiSite Summary
 #
-#                                Version 1.8
+#                              Version 1.8.1
 #
-#     Copyright (C) 2004 - 2006 25th-floor - de Pretis & Helmberger KEG.
+#                  Copyright (C) 2004 - 2016 25th-floor GmbH
 #                            All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -17,7 +17,7 @@
 # PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along with
-# this program; if not, write to the Free Software Foundation, Inc., 59 Temple·
+# this program; if not, write to the Free Software Foundation, Inc., 59 TempleÂ·
 # Place, Suite 330, Boston, MA  02111-1307  USA
 #
 use strict;

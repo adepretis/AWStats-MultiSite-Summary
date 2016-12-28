@@ -1,10 +1,10 @@
 
                           AWStats MultiSite Summary
 
-                                 Version 1.8
+                                Version 1.8.1
 
-                          Copyright (C) 2005 - 2012
-                   25th-floor - de Pretis & Helmberger KG.
+                          Copyright (C) 2005 - 2016
+                              25th-floor - GmbH
                              All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under
@@ -17,7 +17,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple 
+this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA  02111-1307  USA
 
 
@@ -61,10 +61,6 @@ and login as "awstats-mss-demo" with password "demo".
 
 2. QUICK START
 ==============
-
-The latest version of AWStats MultiSite Summary can be retrieved from:
-
-    http://www.25th-floor.com/oss/projects/AWStats-MultiSite-Summary
 
 To install AWStats MultiSite Summary:
 
@@ -200,24 +196,3 @@ all on CPAN (http://search.cpan.org):
     File::Slurp
     Math::Round::Var
     Template Toolkit (see also http://www.tt2.org)
-
-
-
-5. SUPPORT
-==========
-
-Our mailing list provides a forum for discussing issues relating to the use and
-of AWStats MultiSite Summary.
-
-To subscribe to the mailing list send an email to:
-
-    awstats-mss-subscribe@25th-floor.com
-
-with an empty message body. You can also use the web· interface to subscribe or
-browse the archives:
-
-    http://lists.25th-floor.com/wwsympa.fcgi/info/awstats-mss
-
-Please don't hesitate to report bugs at:
-
-    http://bugtraq.25th-floor.com
