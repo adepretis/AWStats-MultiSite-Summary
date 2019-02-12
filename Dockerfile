@@ -10,6 +10,7 @@ RUN cpanm \
 		File::Find::Rule \
 		File::Slurp \
 		Math::Round::Var \
+		URI::Escape \
 		Switch
 
 RUN apt-get install -y \
